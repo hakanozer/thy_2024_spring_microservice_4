@@ -3,6 +3,8 @@ package com.works.services;
 import com.works.entities.Product;
 import com.works.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,9 +18,11 @@ import java.util.List;
 public class ProductService {
 
     final ProductRepository productRepository;
+    final CacheManager cacheManager;
 
     public Product save(Product product) {
         productRepository.save(product);
+        cacheManager.getCache("product").clear();
         return product;
     }
 
@@ -26,7 +30,9 @@ public class ProductService {
         return productRepository.saveAll(products);
     }
 
-    public Page<Product> findAll(int page, int size ) {
+
+    @Cacheable("product")
+    public Page<Product> findAll( int page, int size ) {
         int currentSize = size;
         int currentPage = page;
 
