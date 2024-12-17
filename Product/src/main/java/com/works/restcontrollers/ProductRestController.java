@@ -34,5 +34,10 @@ public class ProductRestController {
         return productService.findAll(page, size);
     }
 
+    @GetMapping("search")
+    public Page<Product> search( @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "") String q ) {
+        return productService.search(q, page);
+    }
+
 
 }
