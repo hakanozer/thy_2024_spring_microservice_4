@@ -1,5 +1,6 @@
 package com.works.services;
 
+import com.works.feigns.IProduct;
 import com.works.models.ProductModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.client.ServiceInstance;
@@ -15,8 +16,10 @@ import java.util.List;
 public class BasketService {
 
     final DiscoveryClient discoveryClient;
+    final IProduct iProduct;
 
     public ProductModel productSearch(String q) {
+        /*
         List<ServiceInstance> instances = discoveryClient.getInstances("product");
         if (instances != null || !instances.isEmpty()) {
             ServiceInstance serviceInstance = instances.get(0);
@@ -27,6 +30,8 @@ public class BasketService {
             return response.getBody();
         }
         return null;
+         */
+        return iProduct.search(q);
     }
 
 }
