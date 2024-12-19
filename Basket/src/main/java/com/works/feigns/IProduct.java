@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient("product")
 public interface IProduct {
 
-    @GetMapping("/product/search")
+    @GetMapping("/produc/search")
     ProductModel search(@RequestParam String q);
 
 }

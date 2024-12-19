@@ -4,6 +4,8 @@ import com.works.feigns.IProduct;
 import com.works.models.ProductModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ public class BasketService {
 
     final DiscoveryClient discoveryClient;
     final IProduct iProduct;
+    final CircuitBreakerFactory circuitBreakerFactory;
 
     public ProductModel productSearch(String q) {
         /*
@@ -31,7 +34,16 @@ public class BasketService {
         }
         return null;
          */
-        return iProduct.search(q);
+        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("breaker1");
+        return circuitBreaker.run(
+                () -> iProduct.search(q),
+                throwable -> fallBack(q)
+        );
+    }
+
+    private ProductModel fallBack(String q) {
+        ProductModel p = new ProductModel();
+        return p;
     }
 
 }
