@@ -20,6 +20,7 @@ public class BasketService {
     final DiscoveryClient discoveryClient;
     final IProduct iProduct;
     final CircuitBreakerFactory circuitBreakerFactory;
+    final CircuitBreakerFactory globalCircuitBreakerFactory;
 
     public ProductModel productSearch(String q) {
         /*
@@ -35,6 +36,7 @@ public class BasketService {
         return null;
          */
         CircuitBreaker circuitBreaker = circuitBreakerFactory.create("breaker1");
+        CircuitBreaker circuitBreaker1 = globalCircuitBreakerFactory.create("breaker2");
         return circuitBreaker.run(
                 () -> iProduct.search(q),
                 throwable -> fallBack(q)
